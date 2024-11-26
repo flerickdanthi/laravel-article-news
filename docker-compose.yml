@@ -12,8 +12,6 @@ services:
       - .:/var/www
     networks:
       - laravel
-    depends_on:
-      - mysql
 
   # Nginx Service
   nginx:
@@ -26,8 +24,6 @@ services:
       - .:/var/www
     networks:
       - laravel
-    depends_on:
-      - app
 
   # MySQL Service
   mysql:
@@ -36,7 +32,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: laravel
-      MYSQL_USER: root
+      MYSQL_USER: laravel
       MYSQL_PASSWORD: example
     volumes:
       - mysql_data:/var/lib/mysql

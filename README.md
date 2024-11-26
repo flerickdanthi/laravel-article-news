@@ -64,3 +64,299 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
+Requirements
+PHP: 8.1 or above
+Composer
+Docker (for containerized setup)
+MySQL: 8.0 or above
+Node.js (optional, for additional package builds)
+
+
+Setup Instructions
+
+Clone Repository
+bash
+Copy code
+git clone https://github.com/flerickdanthi/laravel-article-news.git
+cd news-aggregator-api
+Environment Setup
+Duplicate .env.example and rename it to .env:
+
+bash
+Copy code
+cp .env.example .env
+Update the following in .env:
+
+env
+Copy code
+APP_NAME=NewsAggregatorAPI
+APP_URL=http://localhost
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=news_aggregator
+DB_USERNAME=root
+DB_PASSWORD=your_password
+Add API keys for external news APIs:
+
+env
+Copy code
+NEWS_API_KEY=your_news_api_key
+GUARDIAN_API_KEY=your_guardian_api_key
+NYT_API_KEY=your_nyt_api_key
+Install Dependencies
+bash
+Copy code
+composer install
+npm install && npm run dev
+Database Configuration
+Ensure your MySQL database server is running.
+Create a database named news_aggregator.
+Run Migrations and Seeders
+bash
+Copy code
+php artisan migrate
+php artisan db:seed
+Docker Setup
+To run the application in a containerized environment:
+
+Ensure Docker and Docker Compose are installed.
+Build and start the containers:
+bash
+Copy code
+docker-compose up -d
+The application will be available at http://localhost.
+
+
+Authentication
+
+Sanctum Installation
+
+Sanctum is already installed and configured in the project.
+Tokens are issued upon successful login for authenticated routes.
+Authentication Endpoints
+Register: POST /api/register
+Login: POST /api/login
+Logout: POST /api/logout
+Password Reset: POST /api/password/reset
+Cron Job Setup
+To regularly fetch articles from external APIs:
+
+Register the Laravel scheduler in your server's crontab:
+
+bash
+Copy code
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+The scheduler runs the command to fetch and update articles:
+
+bash
+Copy code
+php artisan news:fetch
+Clear Cache Commands
+To clear Laravel cache, use the following commands:
+
+bash
+Copy code
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+
+RUN cron job:
+
+php artisan fetch:articles
+
+
+POST: api/register
+
+payload:
+
+{
+    "name": "Flerick",
+    "email": "flerick@apple.com",
+    "password": "secretpassword",
+    "password_confirmation": "secretpassword"
+}
+
+Response:
+{
+    "message": "User registered successfully",
+    "user": {
+        "name": "Flerick",
+        "email": "flerick@apple.com,
+        "updated_at": "2024-11-26T13:59:40.000000Z",
+        "created_at": "2024-11-26T13:59:40.000000Z",
+        "id": 10
+    },
+    "token": "15|F4zQKDsQmfXl9TnMt9Qf5pPIgxMdBX1D655R2d4oee3ce12c"
+}
+
+POST:/api/login
+
+payload:
+{
+    "name": "Flerick",
+    "email": "flerick@apple.com",
+    "password": "secretpassword",
+    "password_confirmation": "secretpassword"
+}
+
+Responce:
+
+{
+    "message": "Login successful",
+    "user": {
+        "id": 12,
+        "name": "John Doe9",
+        "email": "johndoe@hetqeedfd5srd6llddDo.com",
+        "email_verified_at": null,
+        "created_at": "2024-11-26T14:03:14.000000Z",
+        "updated_at": "2024-11-26T14:03:14.000000Z"
+    },
+    "token": "19|P2lU4Y6GX5fyW29oxwsHZmYkYAZlAqIfxw14DrEff79c17fe"
+}
+
+
+POST:/api/loout
+
+Need to pass token in header
+
+
+{
+    "message": "Logged out successfully"
+}
+
+
+Filter
+
+GET: api/articles?page=2&source=Unknown
+
+{
+    "current_page": 2,
+    "data": [
+        {
+            "id": 11,
+            "title": "Australia news live: NSW government to refund $5.5m in Covid fines; overdoses prompt warning over fake oxycodone",
+            "content": "",
+            "author": null,
+            "category": null,
+            "source": "Unknown",
+            "published_at": "2024-11-26 11:52:09",
+            "created_at": "2024-11-26T06:22:09.000000Z",
+            "updated_at": "2024-11-26T06:22:09.000000Z"
+        },
+        {
+            "id": 15,
+            "title": "Afternoon Update: Trump’s tariffs plan; social media ban scramble continues; and an ‘almost respectable’ word of the year",
+            "content": "",
+            "author": null,
+            "category": null,
+            "source": "Unknown",
+            "published_at": "2024-11-26 11:52:09",
+            "created_at": "2024-11-26T06:22:09.000000Z",
+            "updated_at": "2024-11-26T06:22:09.000000Z"
+        },
+        {
+            "id": 16,
+            "title": "‘Crisis’ of domestic violence in NT needs immediate action, advocates say after landmark report released",
+            "content": "",
+            "author": null,
+            "category": "abc",
+            "source": "Unknown",
+            "published_at": "2024-11-26 11:52:09",
+            "created_at": "2024-11-26T06:22:09.000000Z",
+            "updated_at": "2024-11-26T06:22:09.000000Z"
+        },
+        {
+            "id": 19,
+            "title": "‘We need a cultural revolution’: femicide victim’s family seek change in Italy ",
+            "content": "",
+            "author": null,
+            "category": null,
+            "source": "Unknown",
+            "published_at": "2024-11-26 11:52:09",
+            "created_at": "2024-11-26T06:22:09.000000Z",
+            "updated_at": "2024-11-26T06:22:09.000000Z"
+        },
+        {
+            "id": 20,
+            "title": "‘Strictly terrified me!’ Chris McCausland on self-belief, shame and becoming the star of the show",
+            "content": "",
+            "author": null,
+            "category": null,
+            "source": "Unknown",
+            "published_at": "2024-11-26 11:52:09",
+            "created_at": "2024-11-26T06:22:09.000000Z",
+            "updated_at": "2024-11-26T06:22:09.000000Z"
+        }
+    ],
+    "next_page_url": "http://127.0.0.1:8000/api/articles?page=3",
+    "path": "http://127.0.0.1:8000/api/articles",
+    "per_page": 10,
+    "prev_page_url": "http://127.0.0.1:8000/api/articles?page=1",
+    "to": 20,
+    "total": 38
+}
+
+
+GET:/api/articles/ 1
+
+Responce:
+{
+    "id": 1,
+    "title": "Far-right candidate takes shock lead in Romania presidential election",
+    "content": "Calin Georgescu, a critic of the EU and Nato, looks set to face the pro-Europe prime minister in the second round.",
+    "author": null,
+    "category": null,
+    "source": "Unknown",
+    "published_at": "2024-11-26 11:52:09",
+    "created_at": "2024-11-26T06:22:09.000000Z",
+    "updated_at": "2024-11-26T06:22:09.000000Z"
+}
+
+GET:
+
+/api/articless/fetch
+
+
+{"message":"Articles fetched successfully"}
+
+POST:
+
+api/preferences
+
+Payload
+{
+    "category": "abc",
+    "sources": "test",
+    "author": "test"
+}
+
+Responce:
+{
+    "id": 4,
+    "user_id": 4,
+    "category": "abc",
+    "sources": "test2",
+    "author": "test5",
+    "created_at": "2024-11-26T08:21:15.000000Z",
+    "updated_at": "2024-11-26T14:25:46.000000Z"
+}
+
+GET:
+api/preferences
+
+{
+    "id": 4,
+    "user_id": 4,
+    "category": "abc",
+    "sources": "test2",
+    "author": "test5",
+    "created_at": "2024-11-26T08:21:15.000000Z",
+    "updated_at": "2024-11-26T14:25:46.000000Z"
+}
